@@ -1,6 +1,6 @@
 # flutter_book_list
 
-A new Flutter project.
+플러터 입문 프로젝트 1: 도서 목록 앱 만들기
 
 ## Getting Started
 
