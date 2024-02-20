@@ -1,7 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'dart:convert';
 
-void main() {
+import 'package:flutter/material.dart';
+import 'package:flutter_chatgpt_app/model/open_ai_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // 1번코드
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -33,6 +39,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   TextEditingController messageTextController = TextEditingController();
+  final List<Messages> _historyList = List.empty(growable: true);
+
+  String apiKey = dotenv.get("OPEN_AI_API");
+  String streamText = "";
 
   static const String _kStrings = "FastCampus Flutter ChatGPT";
 
@@ -66,6 +76,27 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     });
 
     animationController.forward();
+  }
+
+  Future requestChat(String text) async {
+    ChatCompletionModel openAiModel = ChatCompletionModel(
+      model: "gpt-3.5-turbo",
+      messages: [
+        Messages(role: "system", content: "You are a helpful assistant."),
+        ..._historyList,
+      ],
+      stream: false,
+    );
+
+    final url = Uri.https("api.openai.com", "/v1/chat/completions");
+    final resp = await http.post(url,
+        headers: {
+          "Authorization": "Bearer $apiKey",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(openAiModel.toJson()));
+
+    print(resp.body);
   }
 
   @override
@@ -123,75 +154,79 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   child: Center(
                     child: AnimatedBuilder(
                       animation: _characterCount,
-                      builder: (BuildContext context, Widget? child){
-                        String text = _currentString.substring(0, _characterCount.value);
+                      builder: (BuildContext context, Widget? child) {
+                        String text =
+                            _currentString.substring(0, _characterCount.value);
                         return Row(
-                        children: [
-                          Text(text, style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                          ),),
-                          const CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.teal,
-                          )
-                        ],
+                          children: [
+                            Text(
+                              text,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                            ),
+                            const CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Colors.teal,
+                            )
+                          ],
                         );
-                    },
+                      },
                     ),
                   ),
                 ),
                 // child: Container(
-                  // // color: Colors.blue,
-                  // // child: const Center(
-                  // //   child: Text(_kStrings),
-                  // // ),
-                  // child: ListView.builder(
-                  //   itemCount: 100,
-                  //   itemBuilder: (context, index) {
-                  //     if (index % 2 == 0) {
-                  //       return const Padding(
-                  //         padding: EdgeInsets.symmetric(vertical: 16),
-                  //         child: Row(
-                  //           children: [
-                  //             CircleAvatar(),
-                  //             SizedBox(
-                  //               width: 8,
-                  //             ),
-                  //             Expanded(
-                  //               child: Column(
-                  //                 crossAxisAlignment: CrossAxisAlignment.start,
-                  //                 children: [
-                  //                   Text('User'),
-                  //                   Text('Message'),
-                  //                 ],
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       );
-                  //     }
-                  //     return const Row(
-                  //       children: [
-                  //         CircleAvatar(
-                  //           backgroundColor: Colors.teal,
-                  //         ),
-                  //         SizedBox(
-                  //           width: 8,
-                  //         ),
-                  //         Expanded(
-                  //           child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               Text('ChatGPT'),
-                  //               Text('OpenAI'),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     );
-                  //   },
-                  // ),
+                // // color: Colors.blue,
+                // // child: const Center(
+                // //   child: Text(_kStrings),
+                // // ),
+                // child: ListView.builder(
+                //   itemCount: 100,
+                //   itemBuilder: (context, index) {
+                //     if (index % 2 == 0) {
+                //       return const Padding(
+                //         padding: EdgeInsets.symmetric(vertical: 16),
+                //         child: Row(
+                //           children: [
+                //             CircleAvatar(),
+                //             SizedBox(
+                //               width: 8,
+                //             ),
+                //             Expanded(
+                //               child: Column(
+                //                 crossAxisAlignment: CrossAxisAlignment.start,
+                //                 children: [
+                //                   Text('User'),
+                //                   Text('Message'),
+                //                 ],
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       );
+                //     }
+                //     return const Row(
+                //       children: [
+                //         CircleAvatar(
+                //           backgroundColor: Colors.teal,
+                //         ),
+                //         SizedBox(
+                //           width: 8,
+                //         ),
+                //         Expanded(
+                //           child: Column(
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               Text('ChatGPT'),
+                //               Text('OpenAI'),
+                //             ],
+                //           ),
+                //         ),
+                //       ],
+                //     );
+                //   },
+                // ),
                 // ),
               ),
               Dismissible(
@@ -229,7 +264,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     ),
                     IconButton(
                       iconSize: 42,
-                      onPressed: () {},
+                      onPressed: () async{
+                        if(messageTextController.text.isEmpty){
+                          return;
+                        }
+                        try{
+                          await requestChat(messageTextController.text.trim());
+                          messageTextController.clear();
+                          streamText = "";
+                        }catch(e){
+                          print(e.toString());
+                        }
+                      },
                       icon: const Icon(Icons.arrow_circle_up),
                     )
                   ],
