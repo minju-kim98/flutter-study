@@ -30,9 +30,9 @@
 
 ## Fast Campus 15개 프로젝트로 실무까지 끝내는 Dart & Flutter 앱 개발
 
-### Part 02: Flutter 기초
+### [Part 02: Flutter 기초](https://github.com/minju-kim98/flutter-study/tree/main/flutter_fundamental)
 
-🟩 Flutter Widget
+✅ Flutter Widget
 
 🟩 Flutter Layout
 
@@ -50,7 +50,7 @@
 
 🟩 예시 프로젝트
 
-    🟩 가위바위보 앱
+    🟩 [가위바위보 앱](https://github.com/minju-kim98/flutter-study/tree/main/flutter_rps_game)
 
     🟩 인스타그램 UI 클론코딩
 
