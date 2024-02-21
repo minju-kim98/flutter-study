@@ -1,14 +1,11 @@
+// providers/todo_firestore.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/models/todo.dart';
 
 class TodoFirebase {
   late CollectionReference todosReference;
-  late Stream<QuerySnapshot> todoStream;
-
-  TodoFirebase() {
-    initDb(); // Call initDb in the constructor
-  }
+  Stream<QuerySnapshot>? todoStream;
 
   Future initDb() async {
     todosReference = FirebaseFirestore.instance.collection('todos');

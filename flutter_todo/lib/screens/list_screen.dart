@@ -1,3 +1,5 @@
+// screens/list_screen.dart
+
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +11,8 @@ import 'package:flutter_todo/providers/todo_firestore.dart';
 // import 'package:flutter_todo/providers/todo_default.dart';
 
 class ListScreen extends StatefulWidget {
+  const ListScreen({super.key});
+
   @override
   _ListScreenState createState() => _ListScreenState();
 }
@@ -21,7 +25,7 @@ class _ListScreenState extends State<ListScreen> {
   void initState() {
     super.initState();
     setState(() {
-      todoFirebase.initDb();
+      todoFirebase.initDb().then((value){});
     });
   }
 
@@ -33,7 +37,7 @@ class _ListScreenState extends State<ListScreen> {
         if (!snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(),
-            body: Center(
+            body: const Center(
               child: CircularProgressIndicator(),
             ),
           );
@@ -42,13 +46,13 @@ class _ListScreenState extends State<ListScreen> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('할 일 목록 앱'),
+              title: const Text('할 일 목록 앱'),
               actions: [
                 InkWell(
                   onTap: () {},
                   child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: Column(
+                    padding: const EdgeInsets.all(5),
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.book),
@@ -60,7 +64,7 @@ class _ListScreenState extends State<ListScreen> {
               ],
             ),
             floatingActionButton: FloatingActionButton(
-              child: Text(
+              child: const Text(
                 '+',
                 style: TextStyle(fontSize: 25),
               ),
@@ -71,8 +75,8 @@ class _ListScreenState extends State<ListScreen> {
                       String title = '';
                       String description = '';
                       return AlertDialog(
-                        title: Text('할 일 추가하기'),
-                        content: Container(
+                        title: const Text('할 일 추가하기'),
+                        content: SizedBox(
                           height: 200,
                           child: Column(
                             children: [
@@ -80,20 +84,20 @@ class _ListScreenState extends State<ListScreen> {
                                 onChanged: (value) {
                                   title = value;
                                 },
-                                decoration: InputDecoration(labelText: '제목'),
+                                decoration: const InputDecoration(labelText: '제목'),
                               ),
                               TextField(
                                 onChanged: (value) {
                                   description = value;
                                 },
-                                decoration: InputDecoration(labelText: '설명'),
+                                decoration: const InputDecoration(labelText: '설명'),
                               )
                             ],
                           ),
                         ),
                         actions: [
                           TextButton(
-                              child: Text('추가'),
+                              child: const Text('추가'),
                               onPressed: () {
                                 Todo newTodo = Todo(
                                     title: title, description: description);
@@ -104,7 +108,7 @@ class _ListScreenState extends State<ListScreen> {
                                 });
                               }),
                           TextButton(
-                            child: Text('취소'),
+                            child: const Text('취소'),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
@@ -119,15 +123,15 @@ class _ListScreenState extends State<ListScreen> {
                   return ListTile(
                     title: Text(todos[index].title),
                     onTap: () {},
-                    trailing: Container(
+                    trailing: SizedBox(
                       width: 80,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Container(
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: InkWell(
-                              child: Icon(Icons.edit),
+                              child: const Icon(Icons.edit),
                               onTap: () {
                                 showDialog(
                                     context: context,
@@ -136,8 +140,8 @@ class _ListScreenState extends State<ListScreen> {
                                       String description =
                                           todos[index].description;
                                       return AlertDialog(
-                                        title: Text('할 일 수정하기'),
-                                        content: Container(
+                                        title: const Text('할 일 수정하기'),
+                                        content: SizedBox(
                                           height: 200,
                                           child: Column(
                                             children: [
@@ -162,7 +166,7 @@ class _ListScreenState extends State<ListScreen> {
                                         ),
                                         actions: [
                                           TextButton(
-                                            child: Text('수정'),
+                                            child: const Text('수정'),
                                             onPressed: () {
                                               Todo newTodo = Todo(
                                                 title: title,
@@ -178,7 +182,7 @@ class _ListScreenState extends State<ListScreen> {
                                             },
                                           ),
                                           TextButton(
-                                            child: Text('취소'),
+                                            child: const Text('취소'),
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
@@ -190,17 +194,17 @@ class _ListScreenState extends State<ListScreen> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             child: InkWell(
-                              child: Icon(Icons.delete),
+                              child: const Icon(Icons.delete),
                               onTap: () {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('할 일 삭제하기'),
+                                        title: const Text('할 일 삭제하기'),
                                         content: Container(
-                                          child: Text('삭제하시겠습니까?'),
+                                          child: const Text('삭제하시겠습니까?'),
                                         ),
                                         actions: [
                                           TextButton(
@@ -211,12 +215,12 @@ class _ListScreenState extends State<ListScreen> {
                                                   Navigator.of(context).pop();
                                                 });
                                               },
-                                              child: Text('삭제')),
+                                              child: const Text('삭제')),
                                           TextButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
                                               },
-                                              child: Text('취소'))
+                                              child: const Text('취소'))
                                         ],
                                       );
                                     });
@@ -229,7 +233,7 @@ class _ListScreenState extends State<ListScreen> {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return Divider();
+                  return const Divider();
                 },
                 itemCount: todos.length),
           );
