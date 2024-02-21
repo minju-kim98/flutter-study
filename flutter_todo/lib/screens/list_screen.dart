@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_todo/models/todo.dart';
 import 'package:flutter_todo/providers/todo_firestore.dart';
+import 'package:flutter_todo/screens/news_screen.dart';
 
 // import 'package:flutter_todo/providers/todo_sqlite.dart';
 // import 'package:flutter_todo/providers/todo_default.dart';
@@ -25,7 +26,7 @@ class _ListScreenState extends State<ListScreen> {
   void initState() {
     super.initState();
     setState(() {
-      todoFirebase.initDb().then((value){});
+      todoFirebase.initDb().then((value) {});
     });
   }
 
@@ -49,9 +50,12 @@ class _ListScreenState extends State<ListScreen> {
               title: const Text('할 일 목록 앱'),
               actions: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => NewsScreen()));
+                  },
                   child: Container(
-                    padding: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(3),
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -84,13 +88,15 @@ class _ListScreenState extends State<ListScreen> {
                                 onChanged: (value) {
                                   title = value;
                                 },
-                                decoration: const InputDecoration(labelText: '제목'),
+                                decoration:
+                                    const InputDecoration(labelText: '제목'),
                               ),
                               TextField(
                                 onChanged: (value) {
                                   description = value;
                                 },
-                                decoration: const InputDecoration(labelText: '설명'),
+                                decoration:
+                                    const InputDecoration(labelText: '설명'),
                               )
                             ],
                           ),
