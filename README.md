@@ -26,7 +26,7 @@
 
 ### 메인 프로젝트: 간단한 쇼핑몰 만들기
 
-🟩 [쇼핑몰 만들기](https://github.com/minju-kim98/flutter-study/tree/main/flutter_book_mall)
+✅ [쇼핑몰 만들기](https://github.com/minju-kim98/flutter-study/tree/main/flutter_book_mall)
 
 ## Fast Campus 15개 프로젝트로 실무까지 끝내는 Dart & Flutter 앱 개발
 
