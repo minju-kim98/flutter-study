@@ -44,4 +44,14 @@ class FirebaseAuthProvider with ChangeNotifier {
       return AuthStatus.loginFail;
     }
   }
+
+  Future<void> logout() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLogin', false);
+    prefs.setString('email', '');
+    prefs.setString('password', '');
+    user = null;
+    await authClient.signOut();
+    print("[-] 로그아웃");
+  }
 }
