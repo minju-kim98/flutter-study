@@ -12,13 +12,13 @@ class HomeTab extends StatelessWidget {
     return FutureBuilder(
       future: itemProvider.fetchItems(),
       builder: (context, snapshot) {
-        if (itemProvider.items.length == 0) {
-          return Center(
+        if (itemProvider.items.isEmpty) {
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
           return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 1 / 1.5,
             ),
@@ -31,18 +31,18 @@ class HomeTab extends StatelessWidget {
                         arguments: itemProvider.items[index]);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Image.network(itemProvider.items[index].imageUrl),
                         Text(
                           itemProvider.items[index].title,
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                         Text(
-                          NumberFormat('#,###').format(itemProvider.items[index].price) + '원',
-                          style: TextStyle(fontSize: 16, color: Colors.red),
+                          '${NumberFormat('#,###').format(itemProvider.items[index].price)}원',
+                          style: const TextStyle(fontSize: 16, color: Colors.red),
                         )
                       ],
                     ),

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_book_mall/models/model_auth.dart';
 import 'package:flutter_book_mall/models/model_login.dart';
@@ -16,18 +14,18 @@ class LoginScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('로그인 화면'),
         ),
-        body: Column(
+        body: const Column(
           children: [
             EmailInput(),
-            const PasswordInput(),
-            const LoginButton(),
-            const Padding(
+            PasswordInput(),
+            LoginButton(),
+            Padding(
               padding: EdgeInsets.all(8.0),
               child: Divider(
                 thickness: 1,
               ),
             ),
-            const RegisterButton(),
+            RegisterButton(),
           ],
         ),
       ),
@@ -36,6 +34,8 @@ class LoginScreen extends StatelessWidget {
 }
 
 class EmailInput extends StatelessWidget {
+  const EmailInput({super.key});
+
   @override
   Widget build(BuildContext context) {
     final loginField = Provider.of<LoginFieldModel>(context, listen: false);
@@ -85,7 +85,7 @@ class LoginButton extends StatelessWidget {
     final authClient =
         Provider.of<FirebaseAuthProvider>(context, listen: false);
     final loginField = Provider.of<LoginFieldModel>(context, listen: false);
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width * 0.85,
       height: MediaQuery.of(context).size.height * 0.05,
       child: ElevatedButton(
@@ -102,14 +102,14 @@ class LoginButton extends StatelessWidget {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
-                  SnackBar(content: Text(authClient.user!.email! + '님 환영합니다!')),
+                  SnackBar(content: Text('${authClient.user!.email!}님 환영합니다!')),
                 );
               Navigator.pushReplacementNamed(context, '/index');
             } else {
               ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text('로그인에 실패했습니다. 다시 시도해주세요.'),
                   ),
                 );

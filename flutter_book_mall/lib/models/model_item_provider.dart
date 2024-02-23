@@ -5,6 +5,7 @@ import 'package:flutter_book_mall/models/model_item.dart';
 class ItemProvider with ChangeNotifier{
   late CollectionReference itemsReference;
   List<Item> items = [];
+  List<Item> searchItems = [];
 
   ItemProvider({reference}){
     itemsReference =
@@ -17,6 +18,19 @@ class ItemProvider with ChangeNotifier{
         return Item.fromSnapshot(document);
       }).toList();
     });
+    notifyListeners();
+  }
+
+  Future<void> search(String query) async{
+    searchItems = [];
+    if(query.isEmpty){
+      return;
+    }
+    for(Item item in items){
+      if(item.title.contains(query)){
+        searchItems.add(item);
+      }
+    }
     notifyListeners();
   }
 }

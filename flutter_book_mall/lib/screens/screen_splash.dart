@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final authClient = Provider.of<FirebaseAuthProvider>(context, listen: false);
     bool isLogin = prefs.getBool('isLogin') ?? false;
-    print("[*] 로그인 상태 : " + isLogin.toString());
+    print("[*] 로그인 상태 : $isLogin");
     if(isLogin){
       String? email = prefs.getString('email');
       String? password = prefs.getString('password');
