@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_book_mall/firebase_options.dart';
 import 'package:flutter_book_mall/models/model_auth.dart';
+import 'package:flutter_book_mall/models/model_item_provider.dart';
 import 'package:flutter_book_mall/screens/screen_detail.dart';
 import 'package:flutter_book_mall/screens/screen_index.dart';
 import 'package:flutter_book_mall/screens/screen_login.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FirebaseAuthProvider()),
+        ChangeNotifierProvider(create: (_) => ItemProvider()),
       ],
       child: MaterialApp(
         title: 'Flutter Shopping mall',
